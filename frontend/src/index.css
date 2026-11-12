@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pantry-dark: #1F2E1A;
+  --color-paper: #EFEAD6;
+  --color-fresh: #3F6832;
+  --color-wheat: #A66A14;
+  --color-tomato: #B3371F;
+  --color-ink: #26331F;
+  --font-display: "Fraunces", serif;
+  --font-body: "Work Sans", sans-serif;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  margin: 0;
+}
