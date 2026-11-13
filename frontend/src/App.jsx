@@ -19,7 +19,8 @@ function App() {
     setResultado(null)
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/sugerencias/', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const res = await fetch(`${API_URL}/api/sugerencias/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productos }),
@@ -108,7 +109,14 @@ function App() {
         )}
 
         {resultado && (
-          <div className="grid md:grid-cols-3 gap-8 animate-[fadeIn_0.5s_ease-out]">
+          <div className="animate-[fadeIn_0.5s_ease-out]">
+          <div className="flex items-center gap-2 mb-6">
+              <span className="w-2 h-2 rounded-full bg-fresh animate-pulse" />
+              <p className="text-sm text-ink/60">
+                Generado en tiempo real por IA (Groq · gpt-oss-120b) a partir de lo que escribiste arriba
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
             <div className="border-t-4 border-wheat pt-5 bg-white/50 -mx-4 px-4 pb-4 rounded-b-md">
               <h2 className="font-display text-xl text-pantry-dark mb-4">Orden de consumo</h2>
               <ol className="space-y-3">
@@ -141,6 +149,7 @@ function App() {
                 ))}
               </ul>
             </div>
+          </div>
           </div>
         )}
       </div>
