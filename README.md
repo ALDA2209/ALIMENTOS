@@ -17,7 +17,7 @@ El usuario escribe el inventario de su despensa (productos y fechas de vencimien
 
 - **Frontend:** React + Vite, Tailwind CSS v4
 - **Backend:** Django + Django REST Framework (API REST)
-- **IA:** Google Gemini API (SDK `google-genai`, modelo `gemini-3.8-flash`)
+- **IA:** Groq API (SDK `groq`, modelo `openai/gpt-oss-120b`)
 - **Base de datos:** SQLite (desarrollo)
 - **Despliegue (pendiente):** Render
 
@@ -39,7 +39,7 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-Requiere un archivo `.env` con `GEMINI_API_KEY=tu_api_key`.
+Requiere un archivo `.env` con `GROQ_API_KEY=tu_api_key`.
 
 ### Frontend
 ```bash

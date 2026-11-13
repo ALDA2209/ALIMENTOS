@@ -136,3 +136,4 @@ CORS_ALLOWED_ORIGINS = [
 
 from decouple import config
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
+GROQ_API_KEY = config('GROQ_API_KEY', default='')

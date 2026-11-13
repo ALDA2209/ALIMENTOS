@@ -1,8 +1,7 @@
 import json
 import re
 import time
-from google import genai
-from google.genai import errors
+from groq import Groq, APIStatusError, RateLimitError, InternalServerError
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,10 +9,11 @@ from rest_framework import status
 from .models import ConsultaDesperdicio
 from .serializers import ConsultaDesperdicioSerializer
 
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
+client = Groq(api_key=settings.GROQ_API_KEY)
 
+MODELO = 'openai/gpt-oss-120b'
 MAX_REINTENTOS = 3
-ESPERA_SEGUNDOS = 5
+ESPERA_SEGUNDOS = 3
 
 
 def limpiar_json(texto):
@@ -48,20 +48,23 @@ class GenerarSugerenciasView(APIView):
 
         for intento in range(MAX_REINTENTOS):
             try:
-                respuesta = client.models.generate_content(
-                    model='gemini-3.8-flash',
-                    contents=prompt
+                respuesta = client.chat.completions.create(
+                    model=MODELO,
+                    messages=[{"role": "user", "content": prompt}],
                 )
-                texto_respuesta = respuesta.text
+                texto_respuesta = respuesta.choices[0].message.content
                 break
-            except errors.ServerError as e:
+            except (RateLimitError, InternalServerError) as e:
                 ultimo_error = str(e)
                 if intento < MAX_REINTENTOS - 1:
                     time.sleep(ESPERA_SEGUNDOS)
+            except APIStatusError as e:
+                ultimo_error = str(e)
+                break
 
         if texto_respuesta is None:
             return Response(
-                {'error': f'Gemini no esta disponible ahora mismo: {ultimo_error}'},
+                {'error': f'Groq no esta disponible ahora mismo: {ultimo_error}'},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE
             )
 
